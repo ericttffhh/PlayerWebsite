@@ -1645,6 +1645,126 @@
             gap: 0.5rem;
         }
 
+        /* 🖼️ Apple Pro 全螢幕超清相片藝廊與燈箱 (Gallery Stage & Lightbox) */
+        .gallery-featured-stage {
+            position: relative;
+            width: 100%;
+            height: clamp(340px, 46vw, 480px);
+            min-height: 300px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: #070a14;
+            margin-bottom: 1.15rem;
+            cursor: zoom-in;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.65), 0 10px 28px rgba(0, 0, 0, 0.4);
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-featured-stage:hover {
+            border-color: rgba(6, 182, 212, 0.45);
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.7), 0 12px 35px rgba(6, 182, 212, 0.18);
+        }
+
+        .gallery-featured-stage:hover #detailMainFeaturedImg {
+            transform: scale(1.02);
+        }
+
+        .gallery-zoom-badge {
+            position: absolute;
+            bottom: 0.85rem;
+            right: 0.85rem;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 9999px;
+            padding: 0.35rem 0.9rem;
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            pointer-events: none;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+            transition: all 0.2s ease;
+        }
+
+        .gallery-featured-stage:hover .gallery-zoom-badge {
+            background: rgba(6, 182, 212, 0.9);
+            border-color: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+        }
+
+        .gallery-thumb-item {
+            width: 96px;
+            height: 68px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            background: #000;
+            position: relative;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-thumb-item:hover {
+            border-color: var(--accent-cyan) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-thumb-item.active {
+            border-color: var(--accent-cyan) !important;
+            box-shadow: 0 0 16px rgba(6, 182, 212, 0.6) !important;
+            transform: scale(1.03);
+        }
+
+        .lightbox-nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            color: #fff;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            user-select: none;
+        }
+
+        .lightbox-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+            border-color: var(--accent-cyan);
+        }
+
+        .lightbox-nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        #galleryLightboxOverlay.active {
+            display: flex !important;
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 999999 !important;
+            background: rgba(3, 5, 10, 0.94) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
+        }
+
         /* ==========================================================================
            🔍 Apple Store Catalog Bar & Controls & Hero Video Stage (專案列表頂部動態影片舞台)
            ========================================================================== */
@@ -5320,6 +5440,42 @@
         </div>
     </div>
 
+    <!-- 🖼️ Apple Pro 全螢幕超清相片燈箱檢視器 (High-Resolution Gallery Lightbox) -->
+    <div class="modal-overlay" id="galleryLightboxOverlay" style="display:none; align-items:center; justify-content:center; z-index:999999; background:rgba(3,5,10,0.92); backdrop-filter:blur(28px); -webkit-backdrop-filter:blur(28px);">
+        <div style="position:relative; width:100vw; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.25rem;">
+            <!-- 燈箱頂部控制列 -->
+            <div style="position:absolute; top:1.25rem; left:1.5rem; right:1.5rem; display:flex; justify-content:space-between; align-items:center; z-index:10; pointer-events:auto;">
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <span id="lightboxCounterBadge" style="background:rgba(255,255,255,0.12); color:#fff; font-size:0.85rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:9999px; border:1px solid rgba(255,255,255,0.2);">
+                        第 1 / 1 張
+                    </span>
+                    <span id="lightboxTitleText" style="color:#e2e8f0; font-size:0.95rem; font-weight:600; text-shadow:0 2px 8px rgba(0,0,0,0.8); max-width:60vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></span>
+                </div>
+                <div style="display:flex; gap:0.75rem;">
+                    <a id="lightboxDownloadBtn" href="#" target="_blank" class="btn btn-outline" style="padding:0.4rem 0.85rem; font-size:0.82rem; border-color:rgba(255,255,255,0.3); color:#fff; border-radius:9999px; text-decoration:none;">
+                        🔗 開啟原圖
+                    </a>
+                    <button class="modal-close-btn" id="lightboxCloseBtn" style="position:static; width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.25); color:#fff; font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer;" title="關閉 (ESC)">
+                        ✕
+                    </button>
+                </div>
+            </div>
+
+            <!-- 主圖片舞台 -->
+            <div style="position:relative; max-width:92vw; max-height:82vh; display:flex; align-items:center; justify-content:center; cursor:zoom-out;" id="lightboxStage" onclick="window.closeGalleryLightbox();">
+                <img id="lightboxMainImg" src="" alt="大圖檢視" style="max-width:92vw; max-height:82vh; object-fit:contain; border-radius:14px; box-shadow:0 30px 90px rgba(0,0,0,0.9); transition:transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+            </div>
+
+            <!-- 左右切換按鈕 -->
+            <button class="lightbox-nav-btn" id="lightboxPrevBtn" style="position:absolute; left:1.5rem; top:50%; transform:translateY(-50%);" title="上一張 (←)" onclick="window.prevLightboxImage(); event.stopPropagation();">
+                ‹
+            </button>
+            <button class="lightbox-nav-btn" id="lightboxNextBtn" style="position:absolute; right:1.5rem; top:50%; transform:translateY(-50%);" title="下一張 (→)" onclick="window.nextLightboxImage(); event.stopPropagation();">
+                ›
+            </button>
+        </div>
+    </div>
+
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
@@ -7415,47 +7571,60 @@
 
                 let photoGalleryHtml = '';
                 if (photoList.length > 0) {
-                    if (photoList.length === 1) {
-                        photoGalleryHtml = `
-          <div class="apple-detail-card">
-            <h3 style="color:var(--accent-cyan); margin-bottom:1.15rem; font-size:1.15rem; display:flex; align-items:center; gap:0.5rem; font-weight:700;">
-              <span>📷</span> 成果照片與電路實體圖
-            </h3>
-            <div style="position:relative; width:100%; height:400px; border-radius:18px; overflow:hidden; border:1px solid var(--border-color); background:#0a0a0c; cursor:zoom-in;" onclick="window.open('${photoList[0]}', '_blank')">
-              <img src="${photoList[0]}" 
-                   alt="${escapeHTML(item.title)}" 
-                   style="width:100%; height:100%; object-fit:contain;" 
-                   referrerpolicy="no-referrer" 
-                   loading="lazy" 
-                   data-drive-id="${getGoogleDriveFileId(photoList[0])}" 
-                   onerror="window.handleDriveImgError(this, '${item.category}')">
-            </div>
-          </div>
-        `;
-                    } else {
-                        photoGalleryHtml = `
-          <div class="apple-detail-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.15rem;">
-              <h3 style="color:var(--accent-cyan); font-size:1.15rem; display:flex; align-items:center; gap:0.5rem; font-weight:700;">
+                    window.currentGalleryActiveIdx = 0;
+                    const jsonPhotoList = JSON.stringify(photoList).replace(/"/g, '&quot;');
+                    const safeTitle = escapeHTML(item.title);
+                    const firstImg = photoList[0];
+
+                    photoGalleryHtml = `
+          <div class="apple-detail-card" style="padding:1.75rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.6rem;">
+              <h3 style="color:var(--accent-cyan); font-size:1.15rem; display:flex; align-items:center; gap:0.5rem; font-weight:700; margin:0;">
                 <span>📷</span> 成果高畫質照片藝廊
               </h3>
-              <span style="font-size:0.84rem; color:var(--text-muted); font-weight:600;">共 ${photoList.length} 張照片 (點擊切換)</span>
+              <div style="display:flex; align-items:center; gap:0.6rem;">
+                <span id="detailGalleryCountBadge" style="font-size:0.82rem; background:rgba(6,182,212,0.15); color:var(--accent-cyan); border:1px solid rgba(6,182,212,0.35); padding:0.25rem 0.65rem; border-radius:9999px; font-weight:700;">
+                  共 ${photoList.length} 張照片 (第 1 張)
+                </span>
+                <button class="btn btn-outline" style="padding:0.32rem 0.85rem; font-size:0.8rem; border-radius:9999px; cursor:pointer;" onclick="window.openGalleryLightbox(${jsonPhotoList}, window.currentGalleryActiveIdx || 0, '${safeTitle}')">
+                  🔍 全螢幕大圖
+                </button>
+              </div>
             </div>
-            <!-- 主預覽大圖 (點擊可放大開啟新分頁) -->
-            <div style="position:relative; width:100%; height:380px; border-radius:18px; overflow:hidden; border:1px solid var(--border-color); background:#0a0a0c; margin-bottom:1rem; cursor:zoom-in;" onclick="window.open(document.getElementById('detailMainFeaturedImg').src, '_blank')">
+
+            <!-- 🌟 主預覽超高清大圖舞台 (點擊可立即展開全螢幕燈箱大圖) -->
+            <div class="gallery-featured-stage" 
+                 id="detailFeaturedStage" 
+                 title="點擊全螢幕放大檢視"
+                 onclick="window.openGalleryLightbox(${jsonPhotoList}, window.currentGalleryActiveIdx || 0, '${safeTitle}')">
+              
               <img id="detailMainFeaturedImg" 
-                   src="${photoList[0]}" 
-                   alt="${escapeHTML(item.title)}" 
-                   style="width:100%; height:100%; object-fit:contain; transition:opacity 0.22s ease;" 
+                   src="${firstImg}" 
+                   alt="${safeTitle}" 
+                   style="width:100%; height:100%; object-fit:contain; transition:opacity 0.22s ease, transform 0.25s ease;" 
                    referrerpolicy="no-referrer" 
                    loading="lazy" 
-                   data-drive-id="${getGoogleDriveFileId(photoList[0])}" 
+                   data-drive-id="${getGoogleDriveFileId(firstImg)}" 
                    onerror="window.handleDriveImgError(this, '${item.category}')">
+
+              <!-- 浮動大圖操作提示徽章 -->
+              <div class="gallery-zoom-badge">
+                <span>🔍</span> 點擊查看超清全螢幕大圖
+              </div>
+
+              <div id="detailPhotoBadge" style="position:absolute; top:0.85rem; left:0.85rem; background:rgba(6,182,212,0.92); backdrop-filter:blur(8px); border-radius:9999px; padding:0.28rem 0.85rem; color:#fff; font-size:0.78rem; font-weight:700; box-shadow:0 4px 14px rgba(6,182,212,0.45);">
+                第 1 / ${photoList.length} 張
+              </div>
             </div>
-            <!-- 縮圖軌道 -->
-            <div style="display:flex; gap:0.75rem; overflow-x:auto; padding-bottom:0.5rem;">
+
+            ${photoList.length > 1 ? `
+            <!-- 縮圖選擇軌道 (點擊即時無縫切換上方大圖) -->
+            <div class="gallery-thumbnails-strip" style="display:flex; gap:0.75rem; overflow-x:auto; padding-bottom:0.5rem; -webkit-overflow-scrolling:touch;">
               ${photoList.map((imgUrl, idx) => `
-                <div class="gallery-thumb-item ${idx === 0 ? 'active' : ''}" style="width:90px; height:65px; flex-shrink:0; border-radius:12px; overflow:hidden; border:2px solid ${idx === 0 ? 'var(--accent-cyan)' : 'var(--border-color)'}; cursor:pointer; background:#000; transition:all 0.2s;" onclick="const feat=document.getElementById('detailMainFeaturedImg'); feat.style.opacity='0.25'; setTimeout(()=>{ feat.src='${imgUrl}'; feat.style.opacity='1'; }, 140); this.parentElement.querySelectorAll('.gallery-thumb-item').forEach(el=>el.style.borderColor='var(--border-color)'); this.style.borderColor='var(--accent-cyan)';">
+                <div class="gallery-thumb-item ${idx === 0 ? 'active' : ''}" 
+                     data-index="${idx}"
+                     style="width:96px; height:68px; flex-shrink:0; border-radius:12px; overflow:hidden; border:2px solid ${idx === 0 ? 'var(--accent-cyan)' : 'var(--border-color)'}; box-shadow:${idx === 0 ? '0 0 14px rgba(6,182,212,0.5)' : 'none'}; cursor:pointer; background:#000; position:relative; transition:all 0.22s;" 
+                     onclick="window.switchDetailGalleryPhoto(${idx}, '${imgUrl}', ${photoList.length});">
                   <img src="${imgUrl}" 
                        alt="照片 ${idx + 1}" 
                        style="width:100%; height:100%; object-fit:cover;" 
@@ -7463,12 +7632,13 @@
                        loading="lazy" 
                        data-drive-id="${getGoogleDriveFileId(imgUrl)}" 
                        onerror="window.handleDriveImgError(this, '${item.category}')">
+                  <span style="position:absolute; bottom:3px; right:5px; font-size:0.65rem; color:#fff; background:rgba(0,0,0,0.7); padding:1px 5px; border-radius:4px; font-weight:700;">#${idx + 1}</span>
                 </div>
               `).join('')}
             </div>
+            ` : ''}
           </div>
         `;
-                    }
                 }
 
                 // 渲染大師級 Mac Terminal 程式碼檢視視窗 (Mac IDE Terminal)
@@ -7656,6 +7826,134 @@
                 switchTab('projectDetail');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+
+            window.openFullPageDetail = openFullPageDetail;
+
+            // 🖼️ 成果相片藝廊即時切換器 (Smooth Photo Switcher)
+            window.switchDetailGalleryPhoto = function (idx, imgUrl, total) {
+                window.currentGalleryActiveIdx = idx;
+                const feat = document.getElementById('detailMainFeaturedImg');
+                const badge = document.getElementById('detailPhotoBadge');
+                const countBadge = document.getElementById('detailGalleryCountBadge');
+                if (feat) {
+                    feat.style.opacity = '0.2';
+                    feat.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        feat.src = imgUrl;
+                        feat.style.opacity = '1';
+                        feat.style.transform = 'scale(1)';
+                    }, 130);
+                }
+                if (badge) {
+                    badge.textContent = `第 ${idx + 1} / ${total} 張`;
+                }
+                if (countBadge) {
+                    countBadge.textContent = `共 ${total} 張照片 (第 ${idx + 1} 張)`;
+                }
+                document.querySelectorAll('.gallery-thumb-item').forEach(el => {
+                    const isCurrent = parseInt(el.getAttribute('data-index'), 10) === idx;
+                    el.style.borderColor = isCurrent ? 'var(--accent-cyan)' : 'var(--border-color)';
+                    el.style.boxShadow = isCurrent ? '0 0 14px rgba(6,182,212,0.5)' : 'none';
+                    if (isCurrent) el.classList.add('active');
+                    else el.classList.remove('active');
+                });
+            };
+
+            // 🖼️ 全螢幕超清相片燈箱檢視器核心邏輯 (Apple Pro Lightbox Modal Engine)
+            let currentLightboxImages = [];
+            let currentLightboxIndex = 0;
+
+            function updateLightboxUI() {
+                const mainImg = document.getElementById('lightboxMainImg');
+                const badge = document.getElementById('lightboxCounterBadge');
+                const downloadBtn = document.getElementById('lightboxDownloadBtn');
+                const prevBtn = document.getElementById('lightboxPrevBtn');
+                const nextBtn = document.getElementById('lightboxNextBtn');
+
+                const total = currentLightboxImages.length;
+                const currentUrl = currentLightboxImages[currentLightboxIndex];
+
+                if (mainImg) {
+                    mainImg.style.opacity = '0.25';
+                    mainImg.src = currentUrl;
+                    setTimeout(() => { mainImg.style.opacity = '1'; }, 90);
+                }
+                if (badge) {
+                    badge.textContent = `第 ${currentLightboxIndex + 1} / ${total} 張`;
+                }
+                if (downloadBtn) {
+                    downloadBtn.href = currentUrl;
+                }
+                if (prevBtn) {
+                    prevBtn.style.display = total > 1 ? 'flex' : 'none';
+                }
+                if (nextBtn) {
+                    nextBtn.style.display = total > 1 ? 'flex' : 'none';
+                }
+            }
+
+            window.openGalleryLightbox = function (images, startIndex = 0, title = '') {
+                if (!images || images.length === 0) return;
+                currentLightboxImages = images;
+                currentLightboxIndex = Math.max(0, Math.min(startIndex, images.length - 1));
+
+                const overlay = document.getElementById('galleryLightboxOverlay');
+                const titleEl = document.getElementById('lightboxTitleText');
+                if (!overlay) return;
+
+                if (titleEl) titleEl.textContent = title || '成果相片全螢幕預覽';
+                updateLightboxUI();
+
+                overlay.classList.add('active');
+                overlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            };
+
+            window.closeGalleryLightbox = function () {
+                const overlay = document.getElementById('galleryLightboxOverlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    overlay.style.display = 'none';
+                }
+                document.body.style.overflow = '';
+            };
+
+            window.prevLightboxImage = function () {
+                if (currentLightboxImages.length <= 1) return;
+                currentLightboxIndex = (currentLightboxIndex - 1 + currentLightboxImages.length) % currentLightboxImages.length;
+                updateLightboxUI();
+            };
+
+            window.nextLightboxImage = function () {
+                if (currentLightboxImages.length <= 1) return;
+                currentLightboxIndex = (currentLightboxIndex + 1) % currentLightboxImages.length;
+                updateLightboxUI();
+            };
+
+            const lightboxCloseBtn = document.getElementById('lightboxCloseBtn');
+            if (lightboxCloseBtn) {
+                lightboxCloseBtn.addEventListener('click', () => window.closeGalleryLightbox());
+            }
+
+            const lightboxOverlay = document.getElementById('galleryLightboxOverlay');
+            if (lightboxOverlay) {
+                lightboxOverlay.addEventListener('click', (e) => {
+                    if (e.target === lightboxOverlay) window.closeGalleryLightbox();
+                });
+            }
+
+            // 鍵盤左右箭頭切換與 ESC 關閉相片燈箱
+            window.addEventListener('keydown', (e) => {
+                const overlay = document.getElementById('galleryLightboxOverlay');
+                if (overlay && (overlay.classList.contains('active') || overlay.style.display === 'flex')) {
+                    if (e.key === 'Escape') {
+                        window.closeGalleryLightbox();
+                    } else if (e.key === 'ArrowLeft') {
+                        window.prevLightboxImage();
+                    } else if (e.key === 'ArrowRight') {
+                        window.nextLightboxImage();
+                    }
+            });
 
             /* ==========================================================================
                5. 上傳與編輯中心 (動態多段程式碼與自訂標題編輯器 Engine)
