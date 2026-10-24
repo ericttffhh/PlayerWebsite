@@ -4987,27 +4987,37 @@
 
         window.getGoogleDriveFileId = getGoogleDriveFileId;
 
-        // 🌐 全域 Google 雲端硬碟圖片高容錯三段式載入處理器
+        // 🌐 全域 Google 雲端硬碟圖片高容錯五段式載入處理器 (徹底解決手機端與跨域阻擋問題)
         window.handleDriveImgError = function (img, category) {
             if (!img) return;
             const driveId = img.getAttribute('data-drive-id') || getGoogleDriveFileId(img.src);
-            const defaultImg = (category === 'soldering') ? 'assets/soldering_hero.jpg' : 'assets/circuit_board_hero.jpg';
+            const isSoldering = (category === 'soldering');
+            const localFallback = isSoldering ? 'assets/soldering_hero.jpg' : 'assets/circuit_board_hero.jpg';
+            const ghFallback = isSoldering 
+                ? 'https://raw.githubusercontent.com/ericttffhh/PlayerWebsite/main/assets/soldering_hero.jpg'
+                : 'https://raw.githubusercontent.com/ericttffhh/PlayerWebsite/main/assets/circuit_board_hero.jpg';
 
-            // 第 1 步：若 lh3 串流網址受限，自動切換至 Google Drive 高解析度縮圖快取
+            // 第 1 步：若 lh3 串流網址受阻，自動切換至 Google Drive 縮圖快取
             if (driveId && !img.dataset.triedThumb) {
                 img.dataset.triedThumb = '1';
-                img.src = `https://drive.google.com/thumbnail?id=${driveId}&sz=w1200`;
+                img.src = `https://drive.google.com/thumbnail?id=${driveId}&sz=w1000`;
                 return;
             }
-            // 第 2 步：若縮圖快取受阻，自動切換至 Google usercontent 下載視圖
-            if (driveId && !img.dataset.triedDl) {
-                img.dataset.triedDl = '1';
-                img.src = `https://drive.usercontent.google.com/download?id=${driveId}&export=view`;
+            // 第 2 步：若縮圖快取仍受阻（手機端因 Google 登入轉址攔截），切換至專案庫 GitHub 雲端原始素材
+            if (!img.dataset.triedGh) {
+                img.dataset.triedGh = '1';
+                img.src = ghFallback;
                 return;
             }
-            // 第 3 步：若雲端硬碟權限未公開或離線，平滑回退至精緻職類特寫照
+            // 第 3 步：若 GitHub CDN 受阻，切換至本地高解析度資產
+            if (!img.dataset.triedLocal) {
+                img.dataset.triedLocal = '1';
+                img.src = localFallback;
+                return;
+            }
+            // 第 4 步：終極保底高科技向量 SVG（100% 保證不破圖）
             img.onerror = null;
-            img.src = defaultImg;
+            img.src = isSoldering ? SVG_SOLDERING_HERO : SVG_STM32_DEMO;
         };
 
         function parseSingleUrl(url) {
@@ -5832,7 +5842,7 @@
                     }
                 }
                 return records.map(r => {
-                    const defaultImg = (r.category === 'soldering') ? 'https://lh3.googleusercontent.com/d/1gvtzHZ7VWqK3u77IBqVLJzignmyoIfsn' : 'https://lh3.googleusercontent.com/d/1BbBg8scqDPCHfKFGr0hj55nVEmCH0wPI';
+                    const defaultImg = (r.category === 'soldering') ? 'assets/soldering_hero.jpg' : 'assets/circuit_board_hero.jpg';
                     let convertedImgs = convertGoogleDriveImageUrl(r.images || r.image);
                     if (!convertedImgs || convertedImgs.length === 0) {
                         convertedImgs = [defaultImg];
@@ -6604,7 +6614,7 @@
                 const item = spotlightRecords[index];
                 if (!item) return;
 
-                const itemDefaultImg = (item.category === 'soldering') ? 'https://lh3.googleusercontent.com/d/1gvtzHZ7VWqK3u77IBqVLJzignmyoIfsn' : 'https://lh3.googleusercontent.com/d/1BbBg8scqDPCHfKFGr0hj55nVEmCH0wPI';
+                const itemDefaultImg = (item.category === 'soldering') ? 'assets/soldering_hero.jpg' : 'assets/circuit_board_hero.jpg';
                 const rawImg = (item.images && item.images.length > 0) ? item.images[0] : (item.image || '');
                 const driveId = getGoogleDriveFileId(rawImg);
                 let firstImg = rawImg ? String(rawImg).trim() : '';
@@ -6810,7 +6820,7 @@
             }
 
             function Symbol_ProjectCard(item, index = 0) {
-                const defaultImg = (item.category === 'soldering') ? 'https://lh3.googleusercontent.com/d/1gvtzHZ7VWqK3u77IBqVLJzignmyoIfsn' : 'https://lh3.googleusercontent.com/d/1BbBg8scqDPCHfKFGr0hj55nVEmCH0wPI';
+                const defaultImg = (item.category === 'soldering') ? 'assets/soldering_hero.jpg' : 'assets/circuit_board_hero.jpg';
                 let rawCover = (item.images && item.images.length > 0) ? item.images[0] : (item.image || '');
                 let coverImage = rawCover ? String(rawCover).trim() : '';
 
